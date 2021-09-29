@@ -22,10 +22,10 @@ class MqttConnectionKeepAlive {
   /// Initializes a new instance of the MqttConnectionKeepAlive class.
   MqttConnectionKeepAlive(IMqttConnectionHandler connectionHandler,
       events.EventBus? eventBus, int keepAliveSeconds,
-      [int disconnectOnNoResponsePeriod = 0]) {
+      DisconnectOnNoResponsePeriod disconnectOnNoResponsePeriod) {
     _connectionHandler = connectionHandler;
     _clientEventBus = eventBus;
-    this.disconnectOnNoResponsePeriod = disconnectOnNoResponsePeriod * 1000;
+    this.disconnectOnNoResponsePeriod = disconnectOnNoResponsePeriod;
     keepAlivePeriod = keepAliveSeconds * 1000;
     // Register for message handling of ping request and response messages.
     connectionHandler.registerForMessage(
@@ -50,7 +50,7 @@ class MqttConnectionKeepAlive {
   /// The period of time to wait if the broker does not respond to a ping request, in milliseconds.
   /// If this time period is exceeded the client is forcibly disconnected.
   /// The default is 0, which disables this functionality.
-  int disconnectOnNoResponsePeriod = 0;
+  DisconnectOnNoResponsePeriod disconnectOnNoResponsePeriod = new DisconnectOnNoResponsePeriod(0);
 
   /// The timer that manages the ping callbacks.
   Timer? pingTimer;
@@ -94,13 +94,13 @@ class MqttConnectionKeepAlive {
     MqttLogger.log(
         'MqttConnectionKeepAlive::pingRequired - restarting ping timer');
     pingTimer = Timer(Duration(milliseconds: keepAlivePeriod), pingRequired);
-    if (disconnectOnNoResponsePeriod != 0) {
+    if (disconnectOnNoResponsePeriod.disconnectOnNoResponsePeriod != 0) {
       if (disconnectTimer == null) {
         MqttLogger.log(
             'MqttConnectionKeepAlive::pingRequired - starting disconnect timer');
         if (pinged) {
           disconnectTimer = Timer(
-              Duration(milliseconds: disconnectOnNoResponsePeriod),
+              Duration(milliseconds: disconnectOnNoResponsePeriod.disconnectOnNoResponsePeriod),
               noPingResponseReceived);
         }
       } else {
@@ -109,7 +109,7 @@ class MqttConnectionKeepAlive {
             MqttLogger.log(
                 'MqttConnectionKeepAlive::pingRequired - restarting disconnect timer');
             disconnectTimer = Timer(
-                Duration(milliseconds: disconnectOnNoResponsePeriod),
+                Duration(milliseconds: disconnectOnNoResponsePeriod.disconnectOnNoResponsePeriod),
                 noPingResponseReceived);
           }
         } else {

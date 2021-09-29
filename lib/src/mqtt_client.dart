@@ -136,7 +136,12 @@ class MqttClient {
   /// If this time period is exceeded the client is forcibly disconnected.
   /// The default is 0, which disables this functionality.
   /// Thi setting has no effect if keep alive is disabled.
-  int disconnectOnNoResponsePeriod = 0;
+  //int disconnectOnNoResponsePeriod = 0;
+  DisconnectOnNoResponsePeriod disconnectOnNoResponsePeriodObj = new DisconnectOnNoResponsePeriod(0);
+  int get disconnectOnNoResponsePeriod => disconnectOnNoResponsePeriodObj.disconnectOnNoResponsePeriod;
+  set disconnectOnNoResponsePeriod(int period){
+    disconnectOnNoResponsePeriodObj.disconnectOnNoResponsePeriod = period;
+  }
 
   /// Handles everything to do with publication management.
   @protected
@@ -283,7 +288,7 @@ class MqttClient {
       MqttLogger.log(
           'MqttClient::connect - keep alive is enabled with a value of $keepAlivePeriod seconds');
       keepAlive = MqttConnectionKeepAlive(connectionHandler, clientEventBus,
-          keepAlivePeriod, disconnectOnNoResponsePeriod);
+          keepAlivePeriod, disconnectOnNoResponsePeriodObj);
       if (pongCallback != null) {
         keepAlive!.pongCallback = pongCallback;
       }

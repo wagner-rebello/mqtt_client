@@ -1,13 +1,14 @@
 part of mqtt_client;
 
-/// 
+///
 class DisconnectOnNoResponsePeriod {
   late int _disconnectOnNoResponsePeriod;
-  /// 
-  DisconnectOnNoResponsePeriod(period){
-      _disconnectOnNoResponsePeriod = period * 1000;
+
+  ///
+  DisconnectOnNoResponsePeriod(period) {
+    _disconnectOnNoResponsePeriod = period * 1000;
   }
 
-  set disconnectOnNoResponsePeriod(int period) => _disconnectOnNoResponsePeriod = period*1000;
-  int get disconnectOnNoResponsePeriod => _disconnectOnNoResponsePeriod;
+  set timeout(int period) => _disconnectOnNoResponsePeriod = period * 1000;
+  int get timeout => _disconnectOnNoResponsePeriod;
 }

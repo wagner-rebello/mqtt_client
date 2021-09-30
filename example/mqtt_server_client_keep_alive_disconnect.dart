@@ -100,8 +100,7 @@ Future<int> main() async {
     print('EXAMPLE::Mosquitto client connected');
   } else {
     /// Use status here rather than state if you also want the broker return code.
-    print(
-        'EXAMPLE::ERROR Mosquitto client connection failed - disconnecting, status is ${client.connectionStatus}');
+    print('EXAMPLE::ERROR Mosquitto client connection failed - disconnecting, status is ${client.connectionStatus}');
     client.disconnect();
     exit(-1);
   }
@@ -115,16 +114,14 @@ Future<int> main() async {
   /// notifications of published updates to each subscribed topic.
   client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
     final recMess = c![0].payload as MqttPublishMessage;
-    final pt =
-        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+    final pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
     /// The above may seem a little convoluted for users only interested in the
     /// payload, some users however may be interested in the received publish message,
     /// lets not constrain ourselves yet until the package has been in the wild
     /// for a while.
     /// The payload is a byte buffer, this will be specific to the topic
-    print(
-        'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
+    print('EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
     print('');
   });
 
@@ -132,8 +129,7 @@ Future<int> main() async {
   /// handshake which is Qos dependant. Any message received on this stream has completed its
   /// publishing handshake with the broker.
   client.published!.listen((MqttPublishMessage message) {
-    print(
-        'EXAMPLE::Published notification:: topic is ${message.variableHeader!.topicName}, with Qos ${message.header!.qos}');
+    print('EXAMPLE::Published notification:: topic is ${message.variableHeader!.topicName}, with Qos ${message.header!.qos}');
   });
 
   /// Lets publish to our topic
@@ -175,8 +171,7 @@ void onSubscribed(String topic) {
 /// The unsolicited disconnect callback
 void onDisconnected() {
   print('EXAMPLE::OnDisconnected client callback - Client disconnection');
-  if (client.connectionStatus!.disconnectionOrigin ==
-      MqttDisconnectionOrigin.unsolicited) {
+  if (client.connectionStatus!.disconnectionOrigin == MqttDisconnectionOrigin.unsolicited) {
     print('EXAMPLE::OnDisconnected callback is unsolicited, this is correct');
   }
   exit(-1);
@@ -184,8 +179,7 @@ void onDisconnected() {
 
 /// The successful connect callback
 void onConnected() {
-  print(
-      'EXAMPLE::OnConnected client callback - Client connection was sucessful');
+  print('EXAMPLE::OnConnected client callback - Client connection was sucessful');
 }
 
 /// Pong callback
